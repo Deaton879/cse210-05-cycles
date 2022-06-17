@@ -79,16 +79,20 @@ class HandleCollisionsAction(Action):
         if self._is_game_over:
             cycles = cast.get_actors("cycles")
 
-            x = int(constants.MAX_X / 2)
-            y = int(constants.MAX_Y / 2)
-            color = Color(128, 0, 0, 255) # Darker side of red.
-            position = Point(x, y)
+            color = Color(128, 0, 0, 200)
 
             message = Banner()
-            message.set_padding(10)
+            message.set_padding(15)
             message.set_bkg_color(color)
             message.set_text("Game Over!")
+            message.set_font_size(40)
+
+            x = int(constants.MAX_X / 2)
+            h = message.get_font_size() + 2 * message.get_padding()
+            y = int((constants.MAX_Y / 2) - (h / 2))
+            position = Point(x, y)
             message.set_position(position)
+
             cast.add_actor("banners", message)
 
             for cycle in cycles:
