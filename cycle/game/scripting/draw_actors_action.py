@@ -27,16 +27,16 @@ class DrawActorsAction(Action):
             script (Script): The script of Actions in the game.
         """
         score = cast.get_first_actor("scores")
-        # food = cast.get_first_actor("foods")
-        snakes = cast.get_actors("snakes")
+        cycles = cast.get_actors("cycles")
         
-        messages = cast.get_actors("messages")
+        banners = cast.get_actors("banners")
 
         self._video_service.clear_buffer()
-        # self._video_service.draw_actor(food)
-        for snake in snakes:
-            segments = snake.get_segments()
+        for cycle in cycles:
+            segments = cycle.get_segments()
             self._video_service.draw_actors(segments)
-        # self._video_service.draw_actor(score)
-        self._video_service.draw_actors(messages, True)
+
+        # Banners are last to have topmost priority
+        # over all other items.
+        self._video_service.draw_banners(banners, True)
         self._video_service.flush_buffer()

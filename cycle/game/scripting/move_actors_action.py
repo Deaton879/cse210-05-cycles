@@ -20,6 +20,6 @@ class MoveActorsAction(Action):
         for actor in actors:
             actor.move_next()
 
-        snakes = cast.get_actors("snakes")
-        for snake in snakes:
-            snake.grow_tail(1)
+        cycles = cast.get_actors("cycles")
+        for cycle in cycles:
+            cycle.grow_tail(1)

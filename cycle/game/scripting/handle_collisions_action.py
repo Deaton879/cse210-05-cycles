@@ -1,14 +1,15 @@
 import constants
-from game.casting.actor import Actor
+from game.casting.banner import Banner
 from game.scripting.action import Action
 from game.shared.point import Point
+from game.shared.color import Color
 
 class HandleCollisionsAction(Action):
     """
     An update action that handles interactions between the actors.
     
-    The responsibility of HandleCollisionsAction is to handle the situation when the snake collides
-    with the food, or the snake collides with its segments, or the game is over.
+    The responsibility of HandleCollisionsAction is to handle the situation when the cycle collides
+    with the food, or the cycle collides with its segments, or the game is over.
 
     Attributes:
         _is_game_over (boolean): Whether or not the game is over.
@@ -31,37 +32,35 @@ class HandleCollisionsAction(Action):
             self._handle_game_over(cast)
 
     def _handle_food_collision(self, cast):
-        """Updates the score nd moves the food if the snake collides with the food.
+        """Updates the score nd moves the food if the cycle collides with the food.
         
         Args:
             cast (Cast): The cast of Actors in the game.
         """
-        score = cast.get_first_actor("scores")
-        food = cast.get_first_actor("foods")
-        snake = cast.get_first_actor("snakes")
-        head = snake.get_head()
-
-        pass
+        # score = cast.get_first_actor("scores")
+        # cycle = cast.get_first_actor("cycles")
+        # head = cycle.get_head()
 
         # if head.get_position().equals(food.get_position()):
         #     points = food.get_points()
-        #     snake.grow_tail(points)
+        #     cycle.grow_tail(points)
         #     score.add_points(points)
         #     food.reset()
+        pass
     
     def _handle_segment_collision(self, cast):
-        """Sets the game over flag if the snake collides with one of its segments.
+        """Sets the game over flag if the cycle collides with one of its segments.
         
         Args:
             cast (Cast): The cast of Actors in the game.
         """
-        snakes = cast.get_actors("snakes")
+        cycles = cast.get_actors("cycles")
         
-        head = snakes[0].get_segments()[0]
-        head2 = snakes[1].get_segments()[0]
+        head = cycles[0].get_segments()[0]
+        head2 = cycles[1].get_segments()[0]
 
-        segments1 = snakes[0].get_segments()[1:]
-        segments2 = snakes[1].get_segments()[1:]
+        segments1 = cycles[0].get_segments()[1:]
+        segments2 = cycles[1].get_segments()[1:]
 
         for segment in segments1:
             if head.get_position().equals(segment.get_position()) or head2.get_position().equals(segment.get_position()):
@@ -72,29 +71,29 @@ class HandleCollisionsAction(Action):
 
         
     def _handle_game_over(self, cast):
-        """Shows the 'game over' message and turns the snake and food white if the game is over.
+        """Shows the 'game over' message and turns the cycle and food white if the game is over.
         
         Args:
             cast (Cast): The cast of Actors in the game.
         """
         if self._is_game_over:
-            snakes = cast.get_actors("snakes")
-            
-            food = cast.get_first_actor("foods")
+            cycles = cast.get_actors("cycles")
 
             x = int(constants.MAX_X / 2)
             y = int(constants.MAX_Y / 2)
+            color = Color(128, 0, 0, 255) # Darker side of red.
             position = Point(x, y)
 
-            message = Actor()
+            message = Banner()
+            message.set_padding(10)
+            message.set_bkg_color(color)
             message.set_text("Game Over!")
             message.set_position(position)
-            cast.add_actor("messages", message)
+            cast.add_actor("banners", message)
 
-            for snake in snakes:
-                snake.set_color(constants.WHITE)
-                segments = snake.get_segments()
+            for cycle in cycles:
+                cycle.set_color(constants.WHITE)
+                segments = cycle.get_segments()
 
                 for segment in segments:
                     segment.set_color(constants.WHITE)
-                # food.set_color(constants.WHITE)
