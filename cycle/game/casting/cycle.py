@@ -13,6 +13,7 @@ class Cycle(Actor):
         _player_number (int): Identifies which player the cycle instance belongs to.
         _segments (list[Actor]): The list of Actors representing trailing segments that make the light-wall for this cycle.
         _color (Color): The color that the light wall should be rendered.
+        _wall_active (bool): Whether or not new wall segments are being drawn from this cycle.
     
         All other attributes inherited from Actor.
     """
@@ -21,6 +22,7 @@ class Cycle(Actor):
         self._segments = []
         self._player_number = player_number
         self._color = color
+        self._wall_active = True
         self._prepare_cycle()
 
     def get_segments(self):
@@ -53,23 +55,37 @@ class Cycle(Actor):
         return self._segments[0]
 
     def grow_tail(self, number_of_segments):
-        """Increases the list of segments by the number specified to make the light-wall longer.
+        """Increases the list of segments by the number specified to make the light-wall longer,
+        but only if _wall_active == True.
         
         Args:
             number_of_segments (int): The number of segments to add to the list.
         """
-        for i in range(number_of_segments):
-            tail = self._segments[-1]
-            velocity = tail.get_velocity()
-            offset = velocity.reverse()
-            position = tail.get_position().add(offset)
-            
-            segment = Actor()
-            segment.set_position(position)
-            segment.set_velocity(velocity)
-            segment.set_text(constants.TAIL_SHAPES[self._player_number])
-            segment.set_color(self._color)
-            self._segments.append(segment)
+        if self._wall_active:
+            for i in range(number_of_segments):
+                tail = self._segments[-1]
+                velocity = tail.get_velocity()
+                offset = velocity.reverse()
+                position = tail.get_position().add(offset)
+                
+                segment = Actor()
+                segment.set_position(position)
+                segment.set_velocity(velocity)
+                segment.set_text(constants.TAIL_SHAPES[self._player_number])
+                segment.set_color(self._color)
+                self._segments.append(segment)
+
+    def start_wall(self):
+        """Sets the growing of the tail wall to be active.
+        """
+        self._wall_active = True
+
+
+    def stop_wall(self):
+        """Sets the growing of the tail wall to be inactive.
+        """
+        self._wall_active = False
+
 
     def turn_head(self, velocity):
         """Turns the 'head' of the light cycle to match a given velocity.

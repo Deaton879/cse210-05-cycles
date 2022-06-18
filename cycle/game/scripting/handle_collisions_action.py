@@ -50,7 +50,34 @@ class HandleCollisionsAction(Action):
         #     score.add_points(points)
         #     food.reset()
         pass
-    
+
+    def _check_collision(self, head, seg1, seg2):
+        """Check if a head has collided either one segment or another.
+        
+        Returns: (boolean) True is collision occurred.
+        """
+        return head.get_position().equals(seg1.get_position()) or head.get_position().equals(seg2.get_position())
+
+    def _set_winner(self, player_num = 0):
+        """Sets the winner to the appropriate player:
+            1 : Player 1
+            2 : Player 2
+            All other numbers = Nobody.
+            
+        Args:
+            player_num (int): Either 1, or 2 depending on who won.
+        """
+        if player_num == 1:
+            self._winner = "Player 1"
+            self._winning_color = constants.GREEN_80PCT
+        elif player_num == 2:
+            self._winner = "Player 2"
+            self._winning_color = constants.RED_80PCT
+        else:
+            self._winner = "Nobody"
+            self._winning_color = constants.GREY_80PCT
+
+
     def _handle_segment_collision(self, cast):
         """Sets the game over flag if the cycle collides with one of its segments.
         
@@ -66,18 +93,17 @@ class HandleCollisionsAction(Action):
         segments2 = cycles[1].get_segments()[1:]
 
         for seg1, seg2 in zip(segments1, segments2):
-            if head1.get_position().equals(seg1.get_position()) or head1.get_position().equals(seg2.get_position()):
+            if self._check_collision(head1, seg1, seg2):
                 self._is_game_over = True
-                self._winner = "Player 2"
-                self._winning_color = constants.RED_80PCT
-            if head2.get_position().equals(seg1.get_position()) or head2.get_position().equals(seg2.get_position()):
+                self._set_winner(2)
+
+            if self._check_collision(head2, seg1, seg2):
                 self._is_game_over = True
+                # Check if both players triggered collision within the exact same frame...
                 if self._winner == "":
-                    self._winner = "Player 1"
-                    self._winning_color = constants.GREEN_80PCT
+                    self._set_winner(1)
                 else:
-                    self._winner = "Nobody"
-                    self._winning_color = constants.GREY_80PCT
+                    self._set_winner(0)
 
           
     def _handle_game_over(self, cast):
@@ -88,10 +114,10 @@ class HandleCollisionsAction(Action):
         """
         if self._is_game_over:
             cycles = cast.get_actors("cycles")
-            color = self._winning_color
+            bkg_color = self._winning_color
             message = Banner()
             message.set_padding(15)
-            message.set_bkg_color(color)
+            message.set_bkg_color(bkg_color)
             line1 = "Game Over".center(21)
             line2 = f"{self._winner} Wins!".center(21)
             message.set_text(f"{line1}\n{line2}")
@@ -107,6 +133,7 @@ class HandleCollisionsAction(Action):
 
             for cycle in cycles:
                 cycle.set_color(constants.WHITE)
+                cycle.stop_wall()
                 segments = cycle.get_segments()
 
                 for segment in segments:
