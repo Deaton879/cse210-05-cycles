@@ -9,7 +9,7 @@ class HandleCollisionsAction(Action):
     An update action that handles interactions between the actors.
     
     The responsibility of HandleCollisionsAction is to handle the situation when the cycle collides
-    with the food, or the cycle collides with its segments, or the game is over.
+    with the items, or the cycle collides with its segments, or the game is over.
 
     Attributes:
         _is_game_over (boolean): Whether or not the game is over.
@@ -44,11 +44,11 @@ class HandleCollisionsAction(Action):
         # cycle = cast.get_first_actor("cycles")
         # head = cycle.get_head()
 
-        # if head.get_position().equals(food.get_position()):
-        #     points = food.get_points()
+        # if head.get_position().equals(item.get_position()):
+        #     points = item.get_points()
         #     cycle.grow_tail(points)
         #     score.add_points(points)
-        #     food.reset()
+        #     item.reset()
         pass
 
     def _check_collision(self, head, seg1, seg2):
@@ -107,7 +107,8 @@ class HandleCollisionsAction(Action):
 
           
     def _handle_game_over(self, cast):
-        """Shows the 'game over' message and turns the cycle and food white if the game is over.
+        """Shows the 'game over' message and turns the cycle and any items 
+        white if the game is over.
         
         Args:
             cast (Cast): The cast of Actors in the game.

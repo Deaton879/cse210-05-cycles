@@ -1,5 +1,4 @@
 import constants
-from game.casting.banner import Banner
 
 from game.casting.cast import Cast
 from game.casting.actor import Actor
@@ -21,7 +20,7 @@ def main():
     
     # create the cast
     cast = Cast()
-    # cast.add_actor("foods", Food())
+    # cast.add_actor("items", Item())
     cast.add_actor("cycles", Cycle(constants.GREEN, 1))
     cast.add_actor("cycles", Cycle(constants.RED, 2))
     cast.add_actor("scores", Score())
