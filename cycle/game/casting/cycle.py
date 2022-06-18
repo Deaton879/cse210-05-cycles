@@ -67,7 +67,7 @@ class Cycle(Actor):
             segment = Actor()
             segment.set_position(position)
             segment.set_velocity(velocity)
-            segment.set_text("#")
+            segment.set_text(constants.TAIL_SHAPES[self._player_number - 1])
             segment.set_color(self._color)
             self._segments.append(segment)
 
@@ -82,26 +82,28 @@ class Cycle(Actor):
     def _prepare_cycle(self):
         """Prepares a light cycle based on the instance's assigned player number.
         """
-        if self._player_number == 1:
-            x = int(constants.CELL_SIZE * 15)
-            y = int(constants.CELL_SIZE * 10)
-            position = Point(x, y)
-            velocity = Point(1 * constants.CELL_SIZE, 0)
-        else:
-            x = int(constants.CELL_SIZE * 45)
-            y = int(constants.CELL_SIZE * 30)
-            position = Point(x, y)
-            velocity = Point(-1 * constants.CELL_SIZE, 0)
-            text = "8"
+        text = constants.CYCLE_SHAPE
         
-        # Makes the head or lead segment yellow, to stand out.
-        color = constants.YELLOW
-        segment = Actor()
-        segment.set_position(position)
-        segment.set_velocity(velocity)
-        segment.set_text(text)
-        segment.set_color(color)
-        self._segments.append(segment)
+        for i in range(constants.CYCLE_LENGTH):
+            if self._player_number == 1:
+                x = int(constants.CELL_SIZE * 15)
+                y = int(constants.CELL_SIZE * 10)
+                position = Point(x - (i * constants.CELL_SIZE), y)
+                velocity = Point(1 * constants.CELL_SIZE, 0)
+            else:
+                x = int(constants.CELL_SIZE * 45)
+                y = int(constants.CELL_SIZE * 30)
+                position = Point(x + (i * constants.CELL_SIZE), y)
+                velocity = Point(-1 * constants.CELL_SIZE, 0)
+            
+            # Makes the head or lead segment yellow, to stand out.
+            color = constants.YELLOW
+            segment = Actor()
+            segment.set_position(position)
+            segment.set_velocity(velocity)
+            segment.set_text(text)
+            segment.set_color(color)
+            self._segments.append(segment)
         
         
 
