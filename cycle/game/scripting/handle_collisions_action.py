@@ -18,6 +18,8 @@ class HandleCollisionsAction(Action):
     def __init__(self):
         """Constructs a new HandleCollisionsAction."""
         self._is_game_over = False
+        self._winner = ""
+        self._winning_color = constants.GREY_80PCT
 
     def execute(self, cast, script):
         """Executes the handle collisions action.
@@ -57,20 +59,27 @@ class HandleCollisionsAction(Action):
         """
         cycles = cast.get_actors("cycles")
         
-        head = cycles[0].get_segments()[0]
+        head1 = cycles[0].get_segments()[0]
         head2 = cycles[1].get_segments()[0]
 
         segments1 = cycles[0].get_segments()[1:]
         segments2 = cycles[1].get_segments()[1:]
 
-        for segment in segments1:
-            if head.get_position().equals(segment.get_position()) or head2.get_position().equals(segment.get_position()):
+        for seg1, seg2 in zip(segments1, segments2):
+            if head1.get_position().equals(seg1.get_position()) or head1.get_position().equals(seg2.get_position()):
                 self._is_game_over = True
-        for segment in segments2:
-            if head.get_position().equals(segment.get_position()) or head2.get_position().equals(segment.get_position()):
+                self._winner = "Player 2"
+                self._winning_color = constants.RED_80PCT
+            if head2.get_position().equals(seg1.get_position()) or head2.get_position().equals(seg2.get_position()):
                 self._is_game_over = True
+                if self._winner == "":
+                    self._winner = "Player 1"
+                    self._winning_color = constants.GREEN_80PCT
+                else:
+                    self._winner = "Nobody"
+                    self._winning_color = constants.GREY_80PCT
 
-        
+          
     def _handle_game_over(self, cast):
         """Shows the 'game over' message and turns the cycle and food white if the game is over.
         
@@ -79,13 +88,13 @@ class HandleCollisionsAction(Action):
         """
         if self._is_game_over:
             cycles = cast.get_actors("cycles")
-
-            color = Color(128, 0, 0, 200)
-
+            color = self._winning_color
             message = Banner()
             message.set_padding(15)
             message.set_bkg_color(color)
-            message.set_text("Game Over!")
+            line1 = "Game Over".center(21)
+            line2 = f"{self._winner} Wins!".center(21)
+            message.set_text(f"{line1}\n{line2}")
             message.set_font_size(40)
 
             x = int(constants.MAX_X / 2)

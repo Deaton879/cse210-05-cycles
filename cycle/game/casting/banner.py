@@ -87,7 +87,8 @@ class Banner(Actor):
     def _recalculate_size(self):
         """When text or font size or padding values change, recalculate so that we have proper background.
         """
-        self._height = self._font_size + ( self._padding * 2 )
+        lines = self._text.count("\n") + 1
+        self._height = (self._font_size + 5) * lines + ( self._padding * 2 )
         self._width = pyray.measure_text(self._text, self._font_size) + (self._padding * 2)
     
 
