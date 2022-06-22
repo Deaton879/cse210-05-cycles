@@ -55,6 +55,45 @@ class VideoService:
         """ 
         for actor in actors:
             self.draw_actor(actor, centered)
+
+    def draw_banner(self, banner, centered=False):
+        """Draws the given banner's text on the screen with the appropriate background.
+
+        Args:
+            actor (Actor): The actor to draw.
+        """ 
+        text = banner.get_text()
+        pad = banner.get_padding()
+        x = banner.get_position().get_x()
+        y = banner.get_position().get_y()
+        w = banner.get_width() 
+        h = banner.get_height()
+        
+        if centered:
+            # width = pyray.measure_text(text, font_size)
+            offset = int(w / 2)
+            x -= offset
+
+        text_x = x + pad
+        text_y = y + pad
+        bkg = banner.get_bkg_color().to_tuple()
+        font_size = banner.get_font_size()
+        color = banner.get_color().to_tuple()
+
+        
+            
+        pyray.draw_rectangle(x, y, w, h, bkg)
+        pyray.draw_text(text, text_x, text_y, font_size, color)
+
+
+    def draw_banners(self, banners, centered=False):
+        """Draws the text for the given list of actors on the screen.
+
+        Args:
+            actors (list): A list of actors to draw.
+        """ 
+        for banner in banners:
+            self.draw_banner(banner, centered)
     
     def flush_buffer(self):
         """Copies the buffer contents to the screen. This method should be called at the end of
