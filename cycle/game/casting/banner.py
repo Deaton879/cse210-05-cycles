@@ -2,6 +2,7 @@ from constants import *
 import pyray
 from game.casting.actor import Actor
 from game.shared.color import Color
+from game.shared.point import Point
 
 
 class Banner(Actor):
@@ -12,12 +13,13 @@ class Banner(Actor):
     Attributes:
         _bkg_color (Color): The points earned in the game.
     """
-    def __init__(self, text="", bkg_color = Color(0,0,0,0), padding = 3):
+    def __init__(self, text="", bkg_color = Color(0,0,0,0), font_size = 15, padding = 3):
         super().__init__()
         self._width = 0
         self._height = 0
         self._bkg_color = bkg_color
         self._padding = padding
+        self._font_size = font_size
         self.set_text(text)
         
 
@@ -81,6 +83,16 @@ class Banner(Actor):
         """
         self._font_size = font_size
         self._recalculate_size()
+
+
+    def screen_center(self):
+        """Will use the MAX_X and MAX_Y constants to position this banner
+        in the middle of the screen.
+        """
+        x = int(MAX_X / 2)
+        y = int((MAX_Y / 2) - (self._height / 2))
+        self.set_position(Point(x, y))
+
 
     ############
 

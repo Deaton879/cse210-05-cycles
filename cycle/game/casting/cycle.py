@@ -94,6 +94,7 @@ class Cycle(Actor):
             velocity (Point): A user-provided velocity in terms of (Vx, Vy). 
         """
         self._segments[0].set_velocity(velocity)
+
     
     def _prepare_cycle(self):
         """Prepares a light cycle based on the instance's assigned player number.
