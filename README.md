@@ -2,8 +2,8 @@
 
 __Cycle__  
 _The best rides are the ones where you_  
-_bite off much more than you can chew,_
-_and live through it._
+_bite off much more than you can chew,_  
+_and live through it._  
 _- Doug Bradbury -_
 
 ## Overview
